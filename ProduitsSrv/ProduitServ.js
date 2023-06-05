@@ -8,7 +8,7 @@ const connectTODB = require("./DB/db");
 
 
 app.use(express.json());
-app.use('/produites', ProduitRoutes);
+app.use('/produits', ProduitRoutes);
 
 
 connectTODB(url);

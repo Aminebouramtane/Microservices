@@ -1,5 +1,4 @@
 const Commande = require('../Models/commandes.model');
-const rabbitmq = require('../rabbitmq');
 
 const commandeController = {
   index: async (req, res) => {
