@@ -1,4 +1,4 @@
-const Produit = require("../Models/produits.model");
+const Produit = require("../Models/produits.model")
 const amqp = require("amqplib");
 
 // -------------- a ----------------
@@ -124,42 +124,42 @@ const ModifierPrix = async (req, resp) => {
 };
 
 
-// const AMQResponse = async (idP) => {
-//   const pricesString = [];
-//   const pricePromises = idP.map((id) => getPrice(id).then(data => {
-//     pricesString.push(data.data);
-//   }));
+const AMQResponse = async (idP) => {
+  const pricesString = [];
+  const pricePromises = idP.map((id) => getPrice(id).then(data => {
+    pricesString.push(data.data);
+  }));
 
-//   await Promise.all(pricePromises); 
-//   sendMessage(pricesString.join("-")); 
-// };
+  await Promise.all(pricePromises); 
+  sendMessage(pricesString.join("-")); 
+};
 
   
 
-// async function sendMessage(prices) {
-//   const responseQueue = "productmsg";
-//   const connection = await amqp.connect("amqp://localhost");
-//   const channel = await connection.createChannel();
-//   await channel.assertQueue(responseQueue);
-//   channel.sendToQueue(responseQueue, Buffer.from(prices))
-// }
+async function sendMessage(prices) {
+  const responseQueue = "productmsg";
+  const connection = await amqp.connect("amqp://localhost");
+  const channel = await connection.createChannel();
+  await channel.assertQueue(responseQueue);
+  channel.sendToQueue(responseQueue, Buffer.from(prices))
+}
 
-// async function receiveMessage(queueName) {
-//   const connection = await amqp.connect("amqp://localhost");
-//   const channel = await connection.createChannel();
-//   await channel.assertQueue(queueName);
-//   console.log("Waiting for messages...");
-//   await channel.consume(queueName, (message) => {
-//     const idP = message.content.toString().split("-");
-//     console.log("Received message with idP in produit:", idP); 
-//     AMQResponse(idP); 
+async function receiveMessage(queueName) {
+  const connection = await amqp.connect("amqp://localhost");
+  const channel = await connection.createChannel();
+  await channel.assertQueue(queueName);
+  console.log("Waiting for messages...");
+  await channel.consume(queueName, (message) => {
+    const idP = message.content.toString().split("-");
+    console.log("Received message with idP in produit:", idP); 
+    AMQResponse(idP); 
   
-//     {
-//       noAck: true;
-//     }
-//   });
-// }
+    {
+      noAck: true;
+    }
+  });
+}
 
-// receiveMessage("cmdmsg");
+receiveMessage("cmdmsg");
 
 module.exports = { Index, getPrice, Ajouter, ModifierPrix, Supprimer };
